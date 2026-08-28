@@ -1,0 +1,1 @@
+ssh -S none -4 -i keyfile -L 127.0.0.1:5435:127.0.0.1:5432 posttunnel@bigsea.c3sl.ufpr.br
