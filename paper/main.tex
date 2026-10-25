@@ -1,0 +1,71 @@
+\documentclass[12pt]{article}
+\usepackage{sbc-template}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\babelprovide[main,import=pt-BR]{brazil}
+\usepackage{graphicx,url}
+\sloppy
+
+\title{Descrição e preparação dos dados do serviço 156 de Curitiba\\nos anos de 2017 e 2018}
+\author{Enzo Nakamura Kira\inst{1}, Gustavo Henrique Bruno dos Santos\inst{1}}
+\address{Universidade Tecnológica Federal do Paraná (UTFPR)\\Curitiba -- PR -- Brasil}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This paper summarizes the preparation of Curitiba's 156 service data from 2017 and 2018. We used 24 CSV files and Python to handle missing values, remove duplicates and load the data into Postgiscwb. We describe the main documented attributes, data quality issues, personal information found in the records and the subsequent addition of geographic coordinates.
+\end{abstract}
+\begin{resumo}
+Este artigo resume a preparação dos dados do serviço 156 de Curitiba nos anos de 2017 e 2018. Usamos 24 arquivos CSV e Python para tratar valores nulos, remover duplicatas e inserir os dados no Postgiscwb. Apresentamos os principais atributos documentados, os problemas de qualidade, as informações pessoais encontradas nos registros e a inclusão posterior de coordenadas geográficas.
+\end{resumo}
+
+\section{Introdução}
+O banco utilizado foi o 156 na faixa de anos de 2017 e 2018, inserido na tabela \texttt{bd2\_156\_enzo\_gustavo} do Postgiscwb. Neste artigo, resumimos a preparação dos registros de solicitações e atendimentos, os problemas encontrados e a inclusão de coordenadas geográficas.
+
+\section{Descrição dos dados e inserção}
+Usamos 24 arquivos \texttt{.csv}, com cabeçalhos em português. Eram 238.613 linhas de dados, das quais 92.519 eram duplicatas. Após a limpeza em Python, ficamos com 146.094 registros. Já o \texttt{SELECT COUNT(*)} da Tarefa 02 retornou 142.221 tuplas, total também registrado na atividade de georreferenciamento. Os relatórios não explicam essa diferença de 3.873 registros.
+
+Encontramos valores nulos, principalmente nos campos de data, que precisaram ser tratados. Tivemos também que verificar o tamanho máximo dos campos de texto e limpar os espaços ao redor das strings. Fizemos tudo em Python: o processamento levou cerca de dois minutos e a inserção, três minutos. Inserimos os dados sem chave primária, pois 67.365 registros tinham \texttt{SOLICITACAO} nula, impedindo seu uso direto como chave.
+
+A Tabela~\ref{tab:atributos} apresenta os principais atributos documentados nas atividades. A natureza indicada descreve o conteúdo dos campos, pois os relatórios não apresentam o esquema SQL completo.
+
+\begin{table}[ht]
+\centering
+\caption{Principais atributos documentados nas atividades.}
+\label{tab:atributos}
+\small
+\begin{tabular}{p{5.2cm}p{2.2cm}p{6.1cm}}
+\hline
+\textbf{Atributo} & \textbf{Natureza} & \textbf{Descrição} \\
+\hline
+\texttt{SOLICITACAO} & Identificador & Número da solicitação. \\
+\texttt{DATA\_NASC} & Data & Data de nascimento do usuário. \\
+\texttt{LOGRADOURO\_ASS} & Texto & Logradouro; pode incluir número do imóvel. \\
+\texttt{DESCRICAO}, \texttt{OBSERVACAO} & Texto livre & Descrição e observações da solicitação. \\
+\texttt{MENSAGEM\_RESPOSTA}, \texttt{RESPOSTA\_FINAL} & Texto livre & Respostas do atendimento. \\
+\texttt{geom} & Geometria & Ponto adicionado com SRID 4326. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Qualidade dos dados e informações pessoais}
+Encontramos variações de maiúsculas, minúsculas e acentuação, por exemplo na escrita dos bairros. Foram relatadas 15.129 tuplas com espaços no início ou no fim dos textos e 927 com caracteres de controle, como tabulações. As datas usavam o mesmo formato e os nulos eram valores nulos reais, sem ocorrências da string ``NULL''.
+
+Nós olhamos as quatro colunas de texto livre da Tabela~\ref{tab:atributos} usando principalmente expressões regulares em Python. Encontramos padrões de telefone em 4.371 tuplas, e-mail em 162, CPF em 39 e RG em 11. Parte dos e-mails era da prefeitura, e as correspondências não garantem a identificação de cidadãos. Também encontramos um caso de cartão de crédito e um de conta bancária, validados na atividade.
+
+Na base de 146.094 registros considerada nessa verificação, apenas 2.451 tinham data de nascimento nula: cerca de 98,3\% continham esse dado. Apenas uma tupla não tinha \texttt{LOGRADOURO\_ASS}, e 121.414, aproximadamente 83\%, apresentavam logradouro e número válido do imóvel.
+
+Os nomes apresentaram as maiores dificuldades. Testamos expressões regulares e a biblioteca spaCy, mas encontramos muitos falsos positivos, inclusive nomes de ruas. A busca em SQL retornou 2.331 resultados com precisão insatisfatória. Propusemos mascarar informações pessoais, remover ou generalizar a data de nascimento e ocultar números dos imóveis. Para nomes, ocultar palavras após pronomes de tratamento foi uma possibilidade, mas não garante anonimização completa.
+
+\section{Inclusão de coordenadas geográficas}
+Adicionamos a coluna \texttt{geom}, do tipo \texttt{POINT}, com SRID 4326. Usamos a tabela \texttt{alvara\_enderecos} para associar logradouros e números dos imóveis às coordenadas, criamos um índice GiST e visualizamos os resultados no QGIS. A atualização informou 48.709 linhas afetadas, mas a consulta final encontrou 31.605 tuplas com geometria não nula, cerca de 22,2\% das 142.221 tuplas. Os relatórios não explicam a diferença entre linhas atualizadas e coordenadas preenchidas.
+
+\section{Análise exploratória}
+% Adicionar aqui a análise exploratória: ao menos cinco perguntas básicas
+% e duas avançadas, com resultados e tabelas ou gráficos apropriados.
+% Conferir os atributos no esquema real antes de formular as consultas.
+% Conciliar as contagens entre etapas antes de definir o total da análise.
+% Manter o artigo completo dentro do limite de três páginas.
+
+\end{document}
