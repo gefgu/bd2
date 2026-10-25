@@ -1,0 +1,79 @@
+{
+  "resumo": {
+    "anos": [
+      {
+        "ano": 2016,
+        "total": 79203,
+        "com_geom": 15764
+      },
+      {
+        "ano": 2017,
+        "total": 42111,
+        "com_geom": 8324
+      },
+      {
+        "ano": 2018,
+        "total": 20907,
+        "com_geom": 7517
+      }
+    ],
+    "cobertura": [
+      {
+        "total": 6717,
+        "com_geom": 1359,
+        "categoria": "iluminacao"
+      },
+      {
+        "total": 2546,
+        "com_geom": 513,
+        "categoria": "social"
+      }
+    ],
+    "ultima_data": "2018-11-22",
+    "total_tabela": 142221,
+    "primeira_data": "2017-01-01",
+    "sensibilidade": [
+      {
+        "pct": 30.21,
+        "raio": 100,
+        "total": 513,
+        "proximos": 155
+      },
+      {
+        "pct": 73.88,
+        "raio": 250,
+        "total": 513,
+        "proximos": 379
+      },
+      {
+        "pct": 96.88,
+        "raio": 500,
+        "total": 513,
+        "proximos": 497
+      }
+    ],
+    "total_periodo": 63018,
+    "bairros_com_social": 57,
+    "geocodificados_tabela": 31605,
+    "geocodificados_periodo": 15841
+  },
+  "metadados": {
+    "banco": "postgiscwb",
+    "inicio": "2017-01-01",
+    "postgis": "POSTGIS=\"3.5.2 dea6d0a\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.14.1-CAPI-1.20.5\" (compiled against GEOS 3.13.0) SFCGAL=\"SFCGAL 2.3.0, CGAL 6.2, BOOST 1.90.0\" PROJ=\"9.8.1 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/tmp/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.5.1) LIBXML=\"2.9.14\" LIBJSON=\"0.19\" LIBPROTOBUF=\"1.5.1\" WAGYU=\"0.5.0 (Internal)\" TOPOLOGY",
+    "consulta_em": "2026-10-25T14:40:31.116981-03:00",
+    "srid_calculo": 31982,
+    "fim_exclusivo": "2019-01-01"
+  },
+  "validacao": {
+    "bairros": 75,
+    "ids_nulos": 0,
+    "pontos_fora": 0,
+    "ids_repetidos": 0,
+    "pontos_ambiguos": 0,
+    "bairros_sem_geom": 0,
+    "bairros_invalidos": 0,
+    "bairros_ids_distintos": 75,
+    "geometrias_descartadas": 0
+  }
+}

@@ -1,1 +1,4 @@
 dados/
+# Local database credentials
+/password
+/user_password.txt

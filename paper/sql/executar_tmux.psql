@@ -1,0 +1,13 @@
+-- Executar a partir da raiz do repositorio: \i paper/sql/executar_tmux.psql
+-- Caminhos relativos a este arquivo; somente o cliente escreve o JSON local.
+\set ON_ERROR_STOP on
+BEGIN READ ONLY;
+\pset format unaligned
+\pset tuples_only on
+\o paper/resultados/analise.json
+\ir analise_gis.sql
+\o
+ROLLBACK;
+\pset tuples_only off
+\pset format aligned
+\set ON_ERROR_STOP off
