@@ -1,1 +1,1 @@
-ssh -S none -4 -i keyfile -L 127.0.0.1:5435:127.0.0.1:5432 posttunnel@bigsea.c3sl.ufpr.br
+ssh -S none -4 -i "${SSH_KEY_FILE:?Set SSH_KEY_FILE to your private key path}" -L 127.0.0.1:5435:127.0.0.1:5432 posttunnel@bigsea.c3sl.ufpr.br
